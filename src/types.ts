@@ -1,3 +1,15 @@
+export type UserRole = 'owner' | 'photographer' | 'guest';
+
+export interface AppUser {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  phone?: string;
+  avatarUrl?: string;
+  companyName?: string;
+}
+
 export interface EventFolder {
   id: string;
   name: string;

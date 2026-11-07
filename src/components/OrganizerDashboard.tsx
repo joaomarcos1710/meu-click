@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Layers, QrCode, Upload, DollarSign, Users, Eye, FolderPlus, Download, Check, Sparkles, MessageCircle, Settings } from 'lucide-react';
-import type { EventItem } from '../types.js';
+import { Layers, QrCode, Upload, DollarSign, Users, Eye, FolderPlus, Download, Check, Sparkles, MessageCircle, Settings, Crown, Camera } from 'lucide-react';
+import type { EventItem, AppUser } from '../types.js';
 
 interface OrganizerDashboardProps {
   event: EventItem;
   purchasedPhotoIds: string[];
+  currentUser?: AppUser | null;
   onOpenUpload: () => void;
   onOpenQR: () => void;
   onOpenCreateFolder: () => void;
@@ -13,6 +14,7 @@ interface OrganizerDashboardProps {
 export const OrganizerDashboard: React.FC<OrganizerDashboardProps> = ({
   event,
   purchasedPhotoIds,
+  currentUser,
   onOpenUpload,
   onOpenQR,
   onOpenCreateFolder,
@@ -20,16 +22,29 @@ export const OrganizerDashboard: React.FC<OrganizerDashboardProps> = ({
   const photographerPhotos = event.photos.filter((p) => p.uploadedBy === 'photographer').length;
   const guestPhotos = event.photos.filter((p) => p.uploadedBy === 'guest').length;
   const totalRevenue = purchasedPhotoIds.length * event.pricePerPhoto;
+  const isPhotographer = currentUser?.role === 'photographer';
+  const isOwner = currentUser?.role === 'owner';
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-300">
       
-      {/* Top Banner / Event Health */}
+      {/* Top Banner / Event Health & Active Role */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-slate-900 text-white shadow-xl">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400">
-            Painel do Organizador & Fotógrafo
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400">
+              {isPhotographer
+                ? 'Painel Profissional do Fotógrafo'
+                : isOwner
+                ? 'Painel do Dono do Evento'
+                : 'Painel do Organizador'}
+            </span>
+            <span className="px-2 py-0.5 rounded-full bg-white/10 text-[10px] font-semibold text-amber-300 flex items-center gap-1">
+              {isPhotographer ? <Camera className="w-3 h-3" /> : <Crown className="w-3 h-3" />}
+              {currentUser?.name || 'Organizador'}
+            </span>
+          </div>
+
           <h2 className="text-xl sm:text-2xl font-extrabold mt-1">
             {event.title}
           </h2>
@@ -51,7 +66,7 @@ export const OrganizerDashboard: React.FC<OrganizerDashboardProps> = ({
             className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md shadow-blue-600/30 transition-all flex items-center gap-2"
           >
             <Upload className="w-4 h-4" />
-            <span>Adicionar Fotos</span>
+            <span>{isPhotographer ? 'Enviar Lote de Fotos HD' : 'Adicionar Fotos'}</span>
           </button>
         </div>
       </div>
