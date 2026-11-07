@@ -1,0 +1,6 @@
+{
+  "name": "MeuClick",
+  "description": "Plataforma de galeria de fotos para eventos com multi-upload, pastas inteligentes e busca por reconhecimento facial com selfie.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
